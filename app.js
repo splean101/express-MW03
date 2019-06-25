@@ -12,66 +12,34 @@ const app = express();
 app.use('/:n1?/:op?/:n2?', (req, res) => {
     let n1 = Number(req.params.n1) || 0;
     let n2 = Number(req.params.n2) || 0;
-    console.log(n2);
+    console.log(req.params);
     let operation = req.params.op || 'add';
-    let r = 0;
+    let r, op;
     switch (operation) {
         case 'add':
             r = n1 + n2;
-            operation = '+';
+            op = '+';
             break;
         case 'sub':
             r = n1 - n2;
-            operation = '-';
+            op = '-';
             break;
         case 'mul':
             r = n1 * n2;
-            operation = '*';
+            op = '*';
             break;
         case 'div':
             r = n1 / n2;
-            operation = '/';
+            op = '/';
             break;
         default:
-            operation = 'fault';
+            op = 'fault';
     };
-    if (req.params.n1 && n1 === 0) {
-        res.status(400).end('status 400 sent');
-    } else if (req.params.n2 && n2 === 0) {
-        res.status(400).end('status 400 sent');
-    } else if (operation === 'fault') {
+    if (req.params.n1 && n1 === 0 || req.params.n2 && n2 === 0 || op === 'fault') {
         res.status(400).end('status 400 sent');
     } else {
-        res.send(`${n1} ${operation} ${n2} = ${r}`);
+        res.send(`${n1} ${op} ${n2} = ${r}`);
     };
 }).listen(3000);
-/*app.use('/:n1?/:op?/:n2', (req, res) => {
-    if(isNaN(Number(req.params.n1)) || isNaN(Number(req.params.n2))) {
-        res.status(400).end();    
-    };
-let n1 = Number(req.params.n1) || 0;
-let n2 = Number(req.params.n2) || 0;
-let operation = req.params.op || 'add';
-let r = 0;
-switch (operation) {
-    case 'add':
-        r = n1 + n2;
-        operation = '+';
-        break;
-    case 'sub':
-        r = n1 - n2;
-        operation = '-';
-        break;
-    case 'mul':
-        r = n1 * n2;
-        operation = '*';
-       break;
-    case 'div':
-        r = n1 / n2;
-        operation = '/';
-        break;
-    default:
-        res.status(400);
-};
-res.send(`${n1} ${operation} ${n2} = ${r}`)
-}).listen(3000)*/
+//http://localhost:3000/7//8
+//http://localhost:3000//div/8
