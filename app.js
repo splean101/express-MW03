@@ -9,7 +9,43 @@
 const express = require('express');
 
 const app = express();
-app.use('/:n1?/:op?/:n2', (req, res) => {
+app.use('/:n1?/:op?/:n2?', (req, res) => {
+    let n1 = Number(req.params.n1) || 0;
+    let n2 = Number(req.params.n2) || 0;
+    console.log(n2);
+    let operation = req.params.op || 'add';
+    let r = 0;
+    switch (operation) {
+        case 'add':
+            r = n1 + n2;
+            operation = '+';
+            break;
+        case 'sub':
+            r = n1 - n2;
+            operation = '-';
+            break;
+        case 'mul':
+            r = n1 * n2;
+            operation = '*';
+            break;
+        case 'div':
+            r = n1 / n2;
+            operation = '/';
+            break;
+        default:
+            operation = 'fault';
+    };
+    if (req.params.n1 && n1 === 0) {
+        res.status(400).end('status 400 sent');
+    } else if (req.params.n2 && n2 === 0) {
+        res.status(400).end('status 400 sent');
+    } else if (operation === 'fault') {
+        res.status(400).end('status 400 sent');
+    } else {
+        res.send(`${n1} ${operation} ${n2} = ${r}`);
+    };
+}).listen(3000);
+/*app.use('/:n1?/:op?/:n2', (req, res) => {
     if(isNaN(Number(req.params.n1)) || isNaN(Number(req.params.n2))) {
         res.status(400).end();    
     };
@@ -38,4 +74,4 @@ switch (operation) {
         res.status(400);
 };
 res.send(`${n1} ${operation} ${n2} = ${r}`)
-}).listen(3000)
+}).listen(3000)*/
